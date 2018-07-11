@@ -1,7 +1,5 @@
 package com.example.andrew.itunesalbumname;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -18,12 +15,14 @@ import android.widget.Toast;
 
 
 import com.example.andrew.itunesalbumname.model.AlbumDetail;
-import com.example.andrew.itunesalbumname.model.AlbumDetailResponse;
+import com.example.andrew.itunesalbumname.model.ItunesAlbumsResponse;
 import com.example.andrew.itunesalbumname.ui.presenters.AlbumPresenter;
 import com.example.andrew.itunesalbumname.ui.interfaces.AlbumViewInterface;
 import com.example.andrew.itunesalbumname.ui.adapters.AlbumAdapter;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -125,10 +124,11 @@ public class AlbumActivity extends AppCompatActivity implements AlbumViewInterfa
     }
 
     @Override
-    public void displayAlbumInfo(AlbumDetailResponse albumResponse) {
+    public void displayAlbumInfo(ItunesAlbumsResponse albumResponse) {
         albumAdapter = new AlbumAdapter(); //create adapter for recyclerview
         albumAdapter.setItems(albumResponse.getResults().subList(1,albumResponse.getResultCount()));
-        displayAlbumInfo(albumResponse.getResults().get(0));
+        List<AlbumDetail> alb = new ArrayList<AlbumDetail>(albumResponse.getResults());
+        displayAlbumInfo(alb.get(0));
         songsRecyclerView.setAdapter(albumAdapter);
     }
 

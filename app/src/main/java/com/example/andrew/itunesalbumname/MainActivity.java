@@ -14,12 +14,15 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.andrew.itunesalbumname.model.ItunesAlbum;
 import com.example.andrew.itunesalbumname.model.ItunesAlbumsResponse;
 import com.example.andrew.itunesalbumname.ui.adapters.MainAdapter;
 import com.example.andrew.itunesalbumname.ui.presenters.MainPresenter;
 import com.example.andrew.itunesalbumname.ui.interfaces.MainViewInterface;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,8 +77,9 @@ public class MainActivity extends AppCompatActivity implements MainViewInterface
     @Override
     public void displayAlbums(ItunesAlbumsResponse itunesAlbumsResponse) {
         if(itunesAlbumsResponse != null) {
-            itunesAlbumsResponse.sort();
-            adapter = new MainAdapter(new ArrayList<>(itunesAlbumsResponse.getResults()), MainActivity.this);
+            ArrayList alb = new ArrayList<ItunesAlbum>(itunesAlbumsResponse.getResults());
+            Collections.sort(alb);
+            adapter = new MainAdapter(alb, MainActivity.this);
             recyclerViewAlbums.setAdapter(adapter);
         }else{
             Log.d(TAG,"Albums response null");

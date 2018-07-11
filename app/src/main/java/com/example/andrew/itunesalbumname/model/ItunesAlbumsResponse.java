@@ -6,21 +6,19 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Collections;
 import java.util.List;
 
-public class ItunesAlbumsResponse {
+public class ItunesAlbumsResponse<T> {
     @SerializedName("resultCount")
     @Expose
     private Integer resultCount;
     @SerializedName("results")
     @Expose
-    private List<ItunesAlbum> results = null;
-
-    public void sort() {Collections.sort(results);}
+    private List<T> results = null;
 
     public Integer getResultCount() {
         return resultCount;
     }
 
-    public List<ItunesAlbum> getResults() {
+    public List<T> getResults() {
         return results;
     }
 

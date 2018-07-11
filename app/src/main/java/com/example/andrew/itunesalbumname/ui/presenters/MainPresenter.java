@@ -3,6 +3,7 @@ package com.example.andrew.itunesalbumname.ui.presenters;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 
+import com.example.andrew.itunesalbumname.model.ItunesAlbum;
 import com.example.andrew.itunesalbumname.model.ItunesAlbumsResponse;
 import com.example.andrew.itunesalbumname.network.NetworkInterface;
 import com.example.andrew.itunesalbumname.network.RetrofitInstance;
@@ -44,9 +45,9 @@ public class MainPresenter implements MainPresenterInterface {
                 })
                 .debounce(1, TimeUnit.SECONDS)
                 .distinctUntilChanged()
-                .switchMap(new Function<String, ObservableSource<ItunesAlbumsResponse>>() {
+                .switchMap(new Function<String, ObservableSource<ItunesAlbumsResponse<ItunesAlbum>>>() {
                     @Override
-                    public Observable<ItunesAlbumsResponse> apply(@NonNull String s) throws Exception {
+                    public Observable<ItunesAlbumsResponse<ItunesAlbum>> apply(@NonNull String s) throws Exception {
                         return RetrofitInstance.getRetrofitInstance().create(NetworkInterface.class)
                                 .getAlbums(s, "music", "album", "albumTerm");
                     }
@@ -94,7 +95,8 @@ public class MainPresenter implements MainPresenterInterface {
             public void onError(@NonNull Throwable e) {
                 Log.d(TAG,"Error" + e);
                 e.printStackTrace();
-                mvi.displayError("Error fetching Album Data");
+                mvi.displayError("Error fetching Album Data, please restart app");
+                mvi.hideProgressBar();
             }
 
             @Override

@@ -2,7 +2,7 @@ package com.example.andrew.itunesalbumname.ui.presenters;
 
 import android.util.Log;
 
-import com.example.andrew.itunesalbumname.model.AlbumDetailResponse;
+import com.example.andrew.itunesalbumname.model.ItunesAlbumsResponse;
 import com.example.andrew.itunesalbumname.network.NetworkInterface;
 import com.example.andrew.itunesalbumname.network.RetrofitInstance;
 import com.example.andrew.itunesalbumname.ui.interfaces.AlbumPresenterInterface;
@@ -31,11 +31,11 @@ public class AlbumPresenter implements AlbumPresenterInterface {
     }
 
 
-    public DisposableObserver<AlbumDetailResponse> getObserver(){
-        return new DisposableObserver<AlbumDetailResponse>() {
+    public DisposableObserver<ItunesAlbumsResponse> getObserver(){
+        return new DisposableObserver<ItunesAlbumsResponse>() {
 
             @Override
-            public void onNext(@NonNull AlbumDetailResponse songResponse) {
+            public void onNext(@NonNull ItunesAlbumsResponse songResponse) {
                 Log.d(TAG,"OnNext"+songResponse.getResults());
                 avi.displayAlbumInfo(songResponse);
             }
