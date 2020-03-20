@@ -1,14 +1,14 @@
 package com.example.andrew.itunesalbumname.ui.adapters;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.andrew.itunesalbumname.R;
-import com.example.andrew.itunesalbumname.model.AlbumDetail;
+import com.example.andrew.itunesalbumname.db.entitities.Song;
 import com.example.andrew.itunesalbumname.utils.MyDateUtils;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> {
-    private List<AlbumDetail> songs = new ArrayList<>();
+    private List<Song> songs = new ArrayList<>();
 
     @NonNull
     @Override
@@ -39,7 +39,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
         return songs.size();
     }
 
-    public void setItems(Collection<AlbumDetail> tweets) {
+    public void setItems(Collection<Song> tweets) {
         songs.addAll(tweets);
         notifyDataSetChanged();
     }
@@ -63,10 +63,10 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
             ButterKnife.bind(this, view);
         }
 
-        public void bind(AlbumDetail albumSong) {
-            song_name.setText(albumSong.getTrackName());
-            number_song.setText(String.valueOf(albumSong.getTrackNumber()));
-            duration_song.setText(MyDateUtils.millisToMinutes(albumSong.getTrackTimeMillis()));
+        public void bind(Song albumSong) {
+            song_name.setText(albumSong.getSong_name());
+            number_song.setText(String.valueOf(albumSong.getNumber_song()));
+            duration_song.setText(MyDateUtils.millisToMinutes(albumSong.getDuration_song()));
         }
     }
 }

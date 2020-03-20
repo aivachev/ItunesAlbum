@@ -2,20 +2,20 @@ package com.example.andrew.itunesalbumname;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.util.Log;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.andrew.itunesalbumname.model.ItunesAlbum;
-import com.example.andrew.itunesalbumname.model.ItunesAlbumsResponse;
+import com.example.andrew.itunesalbumname.db.entitities.Album;
 import com.example.andrew.itunesalbumname.ui.adapters.MainAdapter;
 import com.example.andrew.itunesalbumname.ui.presenters.MainPresenter;
 import com.example.andrew.itunesalbumname.ui.interfaces.MainViewInterface;
@@ -32,8 +32,11 @@ public class MainActivity extends AppCompatActivity implements MainViewInterface
     RecyclerView recyclerViewAlbums;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindView(R.id.image_empty)
+    ImageView emptyPlaceholder;
+    @BindView(R.id.empty_text)
+    TextView emptyTextview;
 
-    private String TAG = "MainActivity";
     private RecyclerView.Adapter adapter;
     private MainPresenter mainPresenter;
     private SearchView searchView;
@@ -44,10 +47,12 @@ public class MainActivity extends AppCompatActivity implements MainViewInterface
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        emptyPlaceholder.setVisibility(View.VISIBLE);
+        emptyTextview.setVisibility(View.VISIBLE);
 
         setupMVP();
         setupViews();
-        showToast("Just empty screen before you start searching");
+        mainPresenter.setupOldData();
     }
 
     private void setupMVP() {
@@ -75,15 +80,27 @@ public class MainActivity extends AppCompatActivity implements MainViewInterface
     }
 
     @Override
-    public void displayAlbums(ItunesAlbumsResponse itunesAlbumsResponse) {
-        if(itunesAlbumsResponse != null) {
-            ArrayList alb = new ArrayList<ItunesAlbum>(itunesAlbumsResponse.getResults());
+    public void displayAlbums(List<Album> itunesAlbumsResponse) {
+        if (itunesAlbumsResponse.size() != 0) {
+            emptyPlaceholder.setVisibility(View.GONE);
+            emptyTextview.setVisibility(View.GONE);
+            ArrayList alb = new ArrayList<>(itunesAlbumsResponse);
             Collections.sort(alb);
-            adapter = new MainAdapter(alb, MainActivity.this);
+            adapter = new MainAdapter(alb);
             recyclerViewAlbums.setAdapter(adapter);
-        }else{
-            Log.d(TAG,"Albums response null");
+        } else {
+            adapter = new MainAdapter(new ArrayList<>());
+            recyclerViewAlbums.setAdapter(adapter);
+            emptyPlaceholder.setVisibility(View.VISIBLE);
+            emptyTextview.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mainPresenter.onDestroy();
+        mainPresenter = null;
     }
 
     @Override

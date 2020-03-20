@@ -2,10 +2,8 @@ package com.example.andrew.itunesalbumname.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class MyDateUtils {
     private static final String ITUNES_RESPONSE_FORMAT="yyyy-mm-dd'T'HH:mm:ss'Z'"; // 2017-12-25T08:00:00Z

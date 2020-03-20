@@ -1,8 +1,10 @@
 package com.example.andrew.itunesalbumname.ui.interfaces;
 
-import android.support.v7.widget.SearchView;
+import androidx.appcompat.widget.SearchView;
 
 public interface MainPresenterInterface {
 
+    void setupOldData();
     void getAlbumsBasedOnQuery(SearchView searchView);
+    void onDestroy();
 }

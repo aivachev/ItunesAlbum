@@ -1,28 +1,24 @@
 package com.example.andrew.itunesalbumname;
 
-import android.support.design.widget.AppBarLayout;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
+import com.example.andrew.itunesalbumname.db.entitities.Album;
+import com.example.andrew.itunesalbumname.model.ItunesAlbumsResponse;
+import com.google.android.material.appbar.AppBarLayout;
+import androidx.core.app.NavUtils;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.example.andrew.itunesalbumname.model.AlbumDetail;
-import com.example.andrew.itunesalbumname.model.ItunesAlbumsResponse;
 import com.example.andrew.itunesalbumname.ui.presenters.AlbumPresenter;
 import com.example.andrew.itunesalbumname.ui.interfaces.AlbumViewInterface;
 import com.example.andrew.itunesalbumname.ui.adapters.AlbumAdapter;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,10 +35,6 @@ public class AlbumActivity extends AppCompatActivity implements AlbumViewInterfa
     Toolbar toolbar;
     @BindView(R.id.artist_name_text_view)
     TextView artist_name;
-    //@BindView(R.id.copyright_text_view)
-    //TextView copyright;
-    //@BindView(R.id.release_date_text_view)
-    //TextView release_date;
     @BindView(R.id.appbar)
     AppBarLayout appBarLayout;
     @BindView(R.id.album_top_image)
@@ -124,22 +116,28 @@ public class AlbumActivity extends AppCompatActivity implements AlbumViewInterfa
     }
 
     @Override
-    public void displayAlbumInfo(ItunesAlbumsResponse albumResponse) {
+    public void displaySongInfo(ItunesAlbumsResponse albumResponse) {
         albumAdapter = new AlbumAdapter(); //create adapter for recyclerview
         albumAdapter.setItems(albumResponse.getResults().subList(1,albumResponse.getResultCount()));
-        List<AlbumDetail> alb = new ArrayList<AlbumDetail>(albumResponse.getResults());
-        displayAlbumInfo(alb.get(0));
         songsRecyclerView.setAdapter(albumAdapter);
     }
 
-    private void displayAlbumInfo(AlbumDetail alb) {
-        album_name.setText(alb.getCollectionCensoredName());
-        artist_name.setText(alb.getArtistName());
+    @Override
+    public void displayAlbumInfo(Album alb) {
+        album_name.setText(alb.getAlbum_name());
+        artist_name.setText(alb.getArtist_name());
         Picasso.get()
-                .load(alb.getArtworkUrl100())
+                .load(alb.getAlbum_image())
                 .transform(new BlurTransformation(getApplicationContext(), 5, 2))
                 .into(albumImageView);
-        Picasso.get().load(alb.getArtworkUrl100()).into(albumTopImage);
+        Picasso.get().load(alb.getAlbum_image()).into(albumTopImage);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        albumPresenter.onDestroy();
+        albumPresenter = null;
     }
 
     @Override
